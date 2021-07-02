@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\author{Name}
+\title{This is an prova}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\usemintedstyle{fruity}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+We expect you to prepare a document with this template. This document's scope is to provide students with a written alternative to learn about the topic of the ACT course.
+This document should report the \textbf{theoretical information} discussed during classes. You should write all the information and reference that can be useful to understand the topic. Moreover, you need to report a \textbf{walk-through} of one challenge on the same topic.
+Think about you before taking ACT class and what you knew back then. You explain to your older self the topic.
+Use class recording and slides as a guide for what is the minimum information that is needed.
+Make great use of examples and drawings. You can use drawings from slides or make new drawings.
+In the following section, you will find some examples that help you to keep a consistent style.
+Make a reference for every picture or listing in the text. Use this figure reference as an example Figure~\ref{fig:universe}. 
+
+If you need a reference to a link please use footnotes\footnote{\url{https://jinblack.it}}. If you are referencing to a paper or book you the bibliografy.\citep{adams1995hitchhiker}
+Use texttt when refering to register name or code in general like \texttt{EIP} or \texttt{call}
+
+You can start from this example to build your report. Include in your final submission all the source code needed to perform any edit in the future including images source as well.
+
+\begin{figure}[tbh]
+\centering
+\includegraphics[width=0.7\textwidth]{images/universe.jpg}
+\caption{Img example}
+\label{fig:universe}
+\end{figure}
+
+\begin{figure}[tbh]
+\centering
+\input{images/stack_representation_example.pgf}
+ \caption{You can use tikz to draw nice memory drawing (example in file \texttt{stack\_representation\_example.pgf}.). Or google draw.  If you use other tools, make sure to have all figure as \texttt{pdf}. Moreover, if you use an external tool, make sure to provide a way to modify the produced images. A link to google draw with correct permission is good enough.}
+\label{general-stolen-api}
+\end{figure} 
+
+
+\subsection{Example of code}
+Here you can fine an example of how to add some code. It is using the package minted with basic option enabled.
+You can write code in place:
+\begin{minted}[linenos, bgcolor=black, escapeinside=!!]{python}
+import numpy as np
+    
+def incmatrix(genl1,genl2):
+    m = len(genl1)
+    n = len(genl2) !\label{myline}!
+    M = None #to become the incidence matrix
+    VT = np.zeros((n*m,1), int)  #dummy variable
+    
+    #compute the bitwise xor matrix
+    M1 = bitxormatrix(genl1)
+    M2 = np.triu(bitxormatrix(genl2),1) 
+...
+\end{minted}
+You can reference to a line
+The important line is line \ref{myline}.
+
+You can use an external file and ave the code as listing.
+\begin{listing}[ht]
+\inputminted[linenos, bgcolor=black, escapeinside=!!]{python}{x.py}
+\caption{Example from external file}
+\label{listing:3}
+\end{listing}
+
+The important line is line \ref{anotherline} of Listing~\ref{listing:3}.
+
+\section{Conclusion}
+``I always thought something was fundamentally wrong with the universe'' \citep{adams1995hitchhiker}
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}
